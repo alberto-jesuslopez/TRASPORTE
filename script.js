@@ -1,82 +1,104 @@
-// ================================
-// TARIFAS DE TRANSPORTE
-// ================================
+// =======================================
+// TARIFAS DE TRANSPORTE v2.0
+// =======================================
 
 let tarifas = [];
 
-// Cargar el archivo JSON
-fetch("tarifas.json")
-    .then(response => response.json())
-    .then(data => {
-
-        tarifas = data;
-
-        // Rellenar la lista de pueblos
-        const lista = document.getElementById("listaDestinos");
-
-        data.forEach(item => {
-
-            const option = document.createElement("option");
-            option.value = item.DESTINO;
-            lista.appendChild(option);
-
-        });
-
-    })
-    .catch(error => {
-
-        console.error("Error cargando tarifas:", error);
-
-        document.getElementById("resultado").innerHTML =
-            "No se ha podido cargar el archivo de tarifas.";
-
-    });
+const txtDestino = document.getElementById("destino");
+const cmbTipo = document.getElementById("tipo");
+const resultado = document.getElementById("resultado");
+const lista = document.getElementById("listaDestinos");
 
 
-// ================================
-// Buscar precio
-// ================================
+// Elimina acentos y pasa a mayúsculas
+function normalizar(texto){
 
-function buscarPrecio() {
-
-    const destino = document
-        .getElementById("destino")
-        .value
+    return texto
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
         .trim()
         .toUpperCase();
 
-    let tipo = document.getElementById("tipo").value;
+}
 
-    // Compatibilidad con el nombre de la columna del Excel
-    if (tipo === "PESADO PARTICULAR") {
-        tipo = "PESADO PARTICULAR ";
+
+// Cargar JSON
+fetch("tarifas.json")
+
+.then(response=>response.json())
+
+.then(data=>{
+
+    tarifas=data;
+
+    data.forEach(item=>{
+
+        const option=document.createElement("option");
+
+        option.value=item.DESTINO;
+
+        lista.appendChild(option);
+
+    });
+
+})
+
+.catch(()=>{
+
+    resultado.style.color="red";
+    resultado.innerHTML="Error cargando tarifas";
+
+});
+
+
+
+
+// Buscar tarifa
+function buscarPrecio(){
+
+    const destino=normalizar(txtDestino.value);
+
+    if(destino===""){
+
+        resultado.innerHTML="Introduce un destino";
+        resultado.style.color="#666";
+        return;
+
     }
 
-    const resultado = document.getElementById("resultado");
+    let tipo=cmbTipo.value;
 
-    const tarifa = tarifas.find(item =>
-        item.DESTINO.trim().toUpperCase() === destino
+    if(tipo==="PESADO PARTICULAR"){
+
+        tipo="PESADO PARTICULAR ";
+
+    }
+
+    const tarifa=tarifas.find(item=>
+
+        normalizar(item.DESTINO)===destino
+
     );
 
-    if (!tarifa) {
+    if(!tarifa){
 
-        resultado.style.color = "#dc3545";
-        resultado.innerHTML = "❌ Destino no encontrado";
-
+        resultado.style.color="#dc3545";
+        resultado.innerHTML="Destino no encontrado";
         return;
+
     }
 
-    const precio = tarifa[tipo];
+    resultado.style.color="#198754";
 
-    if (precio === undefined || precio === null || precio === "") {
-
-        resultado.style.color = "#dc3545";
-        resultado.innerHTML = "❌ Tarifa no disponible";
-
-        return;
-    }
-
-    resultado.style.color = "#198754";
-    resultado.innerHTML = Number(precio).toFixed(2) + " €";
+    resultado.innerHTML=
+        Number(tarifa[tipo]).toFixed(2)+" €";
 
 }
+
+
+
+// Buscar automáticamente al escribir
+txtDestino.addEventListener("input",buscarPrecio);
+
+// Buscar al cambiar el vehículo
+cmbTipo.addEventListener("change",buscarPrecio);
