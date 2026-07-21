@@ -1,15 +1,20 @@
+// ================================
+// TARIFAS DE TRANSPORTE
+// ================================
+
 let tarifas = [];
 
-// Cargar el archivo de tarifas
+// Cargar el archivo JSON
 fetch("tarifas.json")
-    .then(res => res.json())
-    .then(datos => {
+    .then(response => response.json())
+    .then(data => {
 
-        tarifas = datos;
+        tarifas = data;
 
+        // Rellenar la lista de pueblos
         const lista = document.getElementById("listaDestinos");
 
-        datos.forEach(item => {
+        data.forEach(item => {
 
             const option = document.createElement("option");
             option.value = item.DESTINO;
@@ -17,9 +22,22 @@ fetch("tarifas.json")
 
         });
 
+    })
+    .catch(error => {
+
+        console.error("Error cargando tarifas:", error);
+
+        document.getElementById("resultado").innerHTML =
+            "No se ha podido cargar el archivo de tarifas.";
+
     });
 
-function buscarPrecio(){
+
+// ================================
+// Buscar precio
+// ================================
+
+function buscarPrecio() {
 
     const destino = document
         .getElementById("destino")
@@ -27,21 +45,38 @@ function buscarPrecio(){
         .trim()
         .toUpperCase();
 
-    const tipo = document.getElementById("tipo").value;
+    let tipo = document.getElementById("tipo").value;
+
+    // Compatibilidad con el nombre de la columna del Excel
+    if (tipo === "PESADO PARTICULAR") {
+        tipo = "PESADO PARTICULAR ";
+    }
 
     const resultado = document.getElementById("resultado");
 
-    const tarifa = tarifas.find(t => t.DESTINO.toUpperCase() === destino);
+    const tarifa = tarifas.find(item =>
+        item.DESTINO.trim().toUpperCase() === destino
+    );
 
-    if(!tarifa){
+    if (!tarifa) {
 
         resultado.style.color = "#dc3545";
-        resultado.innerHTML = "Destino no encontrado";
-        return;
+        resultado.innerHTML = "❌ Destino no encontrado";
 
+        return;
+    }
+
+    const precio = tarifa[tipo];
+
+    if (precio === undefined || precio === null || precio === "") {
+
+        resultado.style.color = "#dc3545";
+        resultado.innerHTML = "❌ Tarifa no disponible";
+
+        return;
     }
 
     resultado.style.color = "#198754";
-    resultado.innerHTML = tarifa[tipo].toFixed(2) + " €";
+    resultado.innerHTML = Number(precio).toFixed(2) + " €";
 
 }
