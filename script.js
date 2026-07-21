@@ -1,5 +1,5 @@
 // =======================================
-// TARIFAS DE TRANSPORTE
+// TARIFAS DE TRANSPORTE v3.0
 // =======================================
 
 let tarifas = [];
@@ -7,66 +7,125 @@ let tarifas = [];
 const txtDestino = document.getElementById("destino");
 const cmbTipo = document.getElementById("tipo");
 const resultado = document.getElementById("resultado");
-const lista = document.getElementById("listaDestinos");
+const sugerencias = document.getElementById("sugerencias");
 
 function normalizar(texto){
+
     return texto
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g,"")
         .trim()
         .toUpperCase();
+
 }
 
 fetch("tarifas.json")
-.then(r => r.json())
-.then(datos => {
 
-    tarifas = datos;
+.then(r=>r.json())
 
-    datos.forEach(item => {
+.then(datos=>{
 
-        const option = document.createElement("option");
-        option.value = item.DESTINO;
-        lista.appendChild(option);
-
-    });
+    tarifas=datos;
 
 })
-.catch(err => {
 
-    console.error(err);
+.catch(error=>{
 
-    resultado.innerHTML = "Error cargando tarifas.json";
+    console.error(error);
+
+    resultado.innerHTML="Error cargando tarifas";
 
 });
 
-function buscarPrecio(){
+function mostrarSugerencias(){
 
-    const destino = normalizar(txtDestino.value);
+    const texto=normalizar(txtDestino.value);
 
-    if(destino===""){
-        resultado.innerHTML="Introduce un destino";
+    sugerencias.innerHTML="";
+
+    if(texto.length===0){
+
+        sugerencias.style.display="none";
         return;
+
     }
 
-    const tarifa = tarifas.find(t =>
-        normalizar(t.DESTINO) === destino
+    const encontrados=tarifas.filter(item=>
+
+        normalizar(item.DESTINO).includes(texto)
+
+    );
+
+    encontrados.slice(0,10).forEach(item=>{
+
+        const div=document.createElement("div");
+
+        div.className="item";
+
+        div.innerHTML=item.DESTINO;
+
+        div.onclick=function(){
+
+            txtDestino.value=item.DESTINO;
+
+            sugerencias.style.display="none";
+
+            buscarPrecio();
+
+        };
+
+        sugerencias.appendChild(div);
+
+    });
+
+    sugerencias.style.display=
+        encontrados.length ? "block":"none";
+
+}
+
+function buscarPrecio(){
+
+    const destino=normalizar(txtDestino.value);
+
+    if(destino===""){
+
+        resultado.style.color="#555";
+        resultado.innerHTML="Introduce un destino";
+        return;
+
+    }
+
+    const tarifa=tarifas.find(item=>
+
+        normalizar(item.DESTINO)===destino
+
     );
 
     if(!tarifa){
 
-        resultado.innerHTML="Destino no encontrado";
         resultado.style.color="red";
+        resultado.innerHTML="Destino no encontrado";
         return;
 
     }
 
-    const precio = tarifa[cmbTipo.value];
+    const precio=Number(tarifa[cmbTipo.value]);
 
-    resultado.style.color="green";
-    resultado.innerHTML = precio + " €";
+    resultado.style.color="#198754";
+    resultado.innerHTML=precio.toFixed(2)+" €";
 
 }
 
-txtDestino.addEventListener("input",buscarPrecio);
+txtDestino.addEventListener("keyup",mostrarSugerencias);
+
 cmbTipo.addEventListener("change",buscarPrecio);
+
+document.addEventListener("click",function(e){
+
+    if(e.target!==txtDestino){
+
+        sugerencias.style.display="none";
+
+    }
+
+});
