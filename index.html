@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tarifas de Transporte</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>🚚 Tarifas de Transporte</h1>
+
+    <div class="grupo">
+
+        <label>Destino</label>
+
+        <input
+            type="text"
+            id="destino"
+            list="listaDestinos"
+            placeholder="Escribe un pueblo...">
+
+        <datalist id="listaDestinos"></datalist>
+
+    </div>
+
+    <div class="grupo">
+
+        <label>Tipo de transporte</label>
+
+        <select id="tipo">
+
+            <option value="LIGERO">Ligero</option>
+
+            <option value="PESADO LIGERO">Pesado Ligero</option>
+
+            <option value="PESADO PARTICULAR">Pesado Particular</option>
+
+            <option value="PESADO PROFESIONAL">Pesado Profesional</option>
+
+        </select>
+
+    </div>
+
+    <button onclick="buscarPrecio()">
+
+        CONSULTAR PRECIO
+
+    </button>
+
+    <div id="resultado">
+
+        Introduce un destino
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
