@@ -9,14 +9,9 @@
 }
 
 body{
-
     font-family:Arial, Helvetica, sans-serif;
-
     background:#eceff3;
-
 }
-
-/* CONTENEDOR */
 
 .contenedor{
 
@@ -35,8 +30,6 @@ body{
 
 }
 
-/* LOGO */
-
 .logo{
 
     display:block;
@@ -51,8 +44,6 @@ body{
 
 }
 
-/* TITULO */
-
 h1{
 
     text-align:center;
@@ -63,15 +54,13 @@ h1{
 
     font-size:34px;
 
-    letter-spacing:1px;
-
 }
-
-/* GRUPOS */
 
 .grupo{
 
     margin-bottom:25px;
+
+    position:relative;
 
 }
 
@@ -89,8 +78,6 @@ label{
 
 }
 
-/* INPUTS */
-
 input,
 select{
 
@@ -104,8 +91,6 @@ select{
 
     border-radius:10px;
 
-    transition:.3s;
-
 }
 
 input:focus,
@@ -115,11 +100,59 @@ select:focus{
 
     border-color:#ff6b00;
 
-    box-shadow:0 0 8px rgba(255,107,0,.35);
+}
+
+/* ==========================
+   BUSCADOR
+========================== */
+
+#sugerencias{
+
+    position:absolute;
+
+    top:100%;
+
+    left:0;
+
+    width:100%;
+
+    background:white;
+
+    border:1px solid #ddd;
+
+    border-top:none;
+
+    max-height:220px;
+
+    overflow-y:auto;
+
+    display:none;
+
+    z-index:999;
+
+    border-radius:0 0 10px 10px;
+
+    box-shadow:0 10px 20px rgba(0,0,0,.15);
 
 }
 
-/* BOTON */
+.item{
+
+    padding:12px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.item:hover{
+
+    background:#ff6b00;
+
+    color:white;
+
+}
 
 button{
 
@@ -151,8 +184,6 @@ button:hover{
 
 }
 
-/* RESULTADO */
-
 #resultado{
 
     margin-top:35px;
@@ -175,17 +206,12 @@ button:hover{
 
 }
 
-/* RESPONSIVE */
-
 @media(max-width:600px){
 
     .contenedor{
 
         width:95%;
-
-        margin:20px auto;
-
-        padding:25px;
+        padding:20px;
 
     }
 
@@ -197,7 +223,7 @@ button:hover{
 
     #resultado{
 
-        font-size:34px;
+        font-size:32px;
 
     }
 
