@@ -1,131 +1,106 @@
-// =======================================
-// TARIFAS DE TRANSPORTE v3.0
-// =======================================
+// ============================================
+// TARIFAS DE TRANSPORTE
+// Versión 4.0
+// ============================================
 
 let tarifas = [];
 
-const txtDestino = document.getElementById("destino");
-const cmbTipo = document.getElementById("tipo");
+const destino = document.getElementById("destino");
+const tipo = document.getElementById("tipo");
 const resultado = document.getElementById("resultado");
-const sugerencias = document.getElementById("sugerencias");
 
-function normalizar(texto){
-
+// Normalizar texto
+function normalizar(texto) {
     return texto
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g,"")
+        .replace(/[\u0300-\u036f]/g, "")
         .trim()
         .toUpperCase();
-
 }
 
+// Cargar tarifas
 fetch("tarifas.json")
+    .then(response => response.json())
+    .then(datos => {
 
-.then(r=>r.json())
+        tarifas = datos;
 
-.then(datos=>{
+        // Añadir destinos al desplegable
+        datos
+            .sort((a, b) => a.DESTINO.localeCompare(b.DESTINO))
+            .forEach(item => {
 
-    tarifas=datos;
+                const option = document.createElement("option");
 
-})
+                option.value = item.DESTINO;
+                option.textContent = item.DESTINO;
 
-.catch(error=>{
+                destino.appendChild(option);
 
-    console.error(error);
+            });
 
-    resultado.innerHTML="Error cargando tarifas";
+        // Activar Tom Select
+        new TomSelect("#destino", {
 
-});
+            create: false,
 
-function mostrarSugerencias(){
+            sortField: {
+                field: "text",
+                direction: "asc"
+            },
 
-    const texto=normalizar(txtDestino.value);
+            placeholder: "Buscar destino...",
 
-    sugerencias.innerHTML="";
+            onChange: function () {
 
-    if(texto.length===0){
+                buscarPrecio();
 
-        sugerencias.style.display="none";
-        return;
+            }
 
-    }
-
-    const encontrados=tarifas.filter(item=>
-
-        normalizar(item.DESTINO).includes(texto)
-
-    );
-
-    encontrados.slice(0,10).forEach(item=>{
-
-        const div=document.createElement("div");
-
-        div.className="item";
-
-        div.innerHTML=item.DESTINO;
-
-        div.onclick=function(){
-
-            txtDestino.value=item.DESTINO;
-
-            sugerencias.style.display="none";
-
-            buscarPrecio();
-
-        };
-
-        sugerencias.appendChild(div);
+        });
 
     });
 
-    sugerencias.style.display=
-        encontrados.length ? "block":"none";
+function buscarPrecio() {
 
-}
+    if (destino.value === "") {
 
-function buscarPrecio(){
-
-    const destino=normalizar(txtDestino.value);
-
-    if(destino===""){
-
-        resultado.style.color="#555";
-        resultado.innerHTML="Introduce un destino";
+        resultado.innerHTML = "Selecciona un destino";
+        resultado.style.color = "#666";
         return;
 
     }
 
-    const tarifa=tarifas.find(item=>
+    const pueblo = normalizar(destino.value);
 
-        normalizar(item.DESTINO)===destino
-
+    const fila = tarifas.find(item =>
+        normalizar(item.DESTINO) === pueblo
     );
 
-    if(!tarifa){
+    if (!fila) {
 
-        resultado.style.color="red";
-        resultado.innerHTML="Destino no encontrado";
+        resultado.innerHTML = "Destino no encontrado";
+        resultado.style.color = "#dc3545";
         return;
 
     }
 
-    const precio=Number(tarifa[cmbTipo.value]);
+    const precio = Number(fila[tipo.value]);
 
-    resultado.style.color="#198754";
-    resultado.innerHTML=precio.toFixed(2)+" €";
+    resultado.innerHTML = `
+        <div class="precio-card">
+
+            <div class="precio-destino">${fila.DESTINO}</div>
+
+            <div class="precio-tipo">${tipo.options[tipo.selectedIndex].text}</div>
+
+            <div class="precio-total">${precio.toFixed(2)} €</div>
+
+        </div>
+    `;
+
+    resultado.style.color = "#198754";
 
 }
 
-txtDestino.addEventListener("keyup",mostrarSugerencias);
-
-cmbTipo.addEventListener("change",buscarPrecio);
-
-document.addEventListener("click",function(e){
-
-    if(e.target!==txtDestino){
-
-        sugerencias.style.display="none";
-
-    }
-
-});
+tipo.addEventListener("change", buscarPrecio);
