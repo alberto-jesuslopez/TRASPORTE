@@ -8,7 +8,17 @@
 
     <title>Tarifas de Transporte</title>
 
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
+    <!-- Fuente -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Iconos -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
     <!-- Tom Select -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
@@ -17,47 +27,87 @@
 
 <body>
 
-<div class="contenedor">
+<div class="app">
 
-    <img src="img/logo.png" class="logo" alt="Logo">
+    <!-- CABECERA -->
 
-    <h1>Tarifas de Transporte</h1>
+    <header>
 
-    <div class="grupo">
+        <img src="img/logo.png" class="logo" alt="OBRAMAT">
 
-        <label>📍 Destino</label>
+        <h1>Tarifas de Transporte</h1>
 
-        <select id="destino">
+        <p class="subtitulo">
+            Consulta rápida de tarifas
+        </p>
 
-            <option value="">Seleccione un destino...</option>
+    </header>
 
-        </select>
+    <!-- TARJETA -->
+
+    <div class="card">
+
+        <!-- DESTINO -->
+
+        <div class="campo">
+
+            <label>
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                Destino
+
+            </label>
+
+            <select id="destino">
+
+                <option value="">Buscar destino...</option>
+
+            </select>
+
+        </div>
+
+        <!-- TRANSPORTE -->
+
+        <div class="campo">
+
+            <label>
+
+                <i class="fa-solid fa-truck"></i>
+
+                Tipo de transporte
+
+            </label>
+
+            <select id="tipo">
+
+                <option value="LIGERO">Ligero</option>
+
+                <option value="PESADO PARTICULAR">Pesado Particular</option>
+
+                <option value="PESADO PROFESIONAL">Pesado Profesional</option>
+
+            </select>
+
+        </div>
 
     </div>
 
-    <div class="grupo">
+    <!-- RESULTADO -->
 
-        <label>🚚 Tipo de transporte</label>
+    <div id="resultado" class="resultado">
 
-        <select id="tipo">
+        <div class="precio">-- €</div>
 
-            <option value="LIGERO">Ligero</option>
-            <option value="PESADO LIGERO">Pesado Ligero</option>
-            <option value="PESADO PARTICULAR">Pesado Particular</option>
-            <option value="PESADO PROFESIONAL">Pesado Profesional</option>
+        <div class="destino">Seleccione un destino</div>
 
-        </select>
-
-    </div>
-
-    <div id="resultado">
-
-        Selecciona un destino
+        <div class="vehiculo"></div>
 
     </div>
 
 </div>
 
+<!-- Tom Select -->
 <script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
 <script src="script.js"></script>
