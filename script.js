@@ -1,5 +1,5 @@
 // =======================================
-// TARIFAS DE TRANSPORTE v2.0
+// TARIFAS DE TRANSPORTE
 // =======================================
 
 let tarifas = [];
@@ -9,96 +9,64 @@ const cmbTipo = document.getElementById("tipo");
 const resultado = document.getElementById("resultado");
 const lista = document.getElementById("listaDestinos");
 
-
-// Elimina acentos y pasa a mayúsculas
 function normalizar(texto){
-
     return texto
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g,"")
         .trim()
         .toUpperCase();
-
 }
 
-
-// Cargar JSON
 fetch("tarifas.json")
+.then(r => r.json())
+.then(datos => {
 
-.then(response=>response.json())
+    tarifas = datos;
 
-.then(data=>{
+    datos.forEach(item => {
 
-    tarifas=data;
-
-    data.forEach(item=>{
-
-        const option=document.createElement("option");
-
-        option.value=item.DESTINO;
-
+        const option = document.createElement("option");
+        option.value = item.DESTINO;
         lista.appendChild(option);
 
     });
 
 })
+.catch(err => {
 
-.catch(()=>{
+    console.error(err);
 
-    resultado.style.color="red";
-    resultado.innerHTML="Error cargando tarifas";
+    resultado.innerHTML = "Error cargando tarifas.json";
 
 });
 
-
-
-
-// Buscar tarifa
 function buscarPrecio(){
 
-    const destino=normalizar(txtDestino.value);
+    const destino = normalizar(txtDestino.value);
 
     if(destino===""){
-
         resultado.innerHTML="Introduce un destino";
-        resultado.style.color="#666";
         return;
-
     }
 
-    let tipo=cmbTipo.value;
-
-    if(tipo==="PESADO PARTICULAR"){
-
-        tipo="PESADO PARTICULAR ";
-
-    }
-
-    const tarifa=tarifas.find(item=>
-
-        normalizar(item.DESTINO)===destino
-
+    const tarifa = tarifas.find(t =>
+        normalizar(t.DESTINO) === destino
     );
 
     if(!tarifa){
 
-        resultado.style.color="#dc3545";
         resultado.innerHTML="Destino no encontrado";
+        resultado.style.color="red";
         return;
 
     }
 
-    resultado.style.color="#198754";
+    const precio = tarifa[cmbTipo.value];
 
-    resultado.innerHTML=
-        Number(tarifa[tipo]).toFixed(2)+" €";
+    resultado.style.color="green";
+    resultado.innerHTML = precio + " €";
 
 }
 
-
-
-// Buscar automáticamente al escribir
 txtDestino.addEventListener("input",buscarPrecio);
-
-// Buscar al cambiar el vehículo
 cmbTipo.addEventListener("change",buscarPrecio);
