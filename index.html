@@ -10,74 +10,55 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <!-- Tom Select -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select/dist/css/tom-select.css" rel="stylesheet">
+
 </head>
 
 <body>
 
 <div class="contenedor">
 
-    <!-- LOGO -->
-    <img src="img/logo.png" alt="Logo OBRAMAT" class="logo">
-    <!-- TÍTULO -->
-    <h1>Tarifas de Transporte</h1>
+    <img src="img/logo.png" class="logo" alt="Logo">
 
-    <!-- DESTINO -->
+    <h1>Tarifas de Transporte</h1>
 
     <div class="grupo">
 
-        <label for="destino">
-            📍 Destino
-        </label>
+        <label>📍 Destino</label>
 
-<input
-    type="text"
-    id="destino"
-    placeholder="Escribe el pueblo..."
-    autocomplete="off">
+        <select id="destino">
 
-<div id="sugerencias"></div>
+            <option value="">Seleccione un destino...</option>
+
+        </select>
 
     </div>
 
-    <!-- TIPO -->
-
     <div class="grupo">
 
-        <label for="tipo">
-            🚚 Tipo de transporte
-        </label>
+        <label>🚚 Tipo de transporte</label>
 
         <select id="tipo">
 
             <option value="LIGERO">Ligero</option>
-
             <option value="PESADO LIGERO">Pesado Ligero</option>
-
             <option value="PESADO PARTICULAR">Pesado Particular</option>
-
             <option value="PESADO PROFESIONAL">Pesado Profesional</option>
 
         </select>
 
     </div>
 
-    <!-- BOTÓN -->
-
-    <button onclick="buscarPrecio()">
-
-        CONSULTAR TARIFA
-
-    </button>
-
-    <!-- RESULTADO -->
-
     <div id="resultado">
 
-        Introduce un destino
+        Selecciona un destino
 
     </div>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select/dist/js/tom-select.complete.min.js"></script>
 
 <script src="script.js"></script>
 
