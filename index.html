@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
 
     <meta charset="UTF-8">
@@ -10,29 +11,42 @@
     <link rel="stylesheet" href="style.css">
 
 </head>
+
 <body>
 
 <div class="contenedor">
 
-    <h1>🚚 Tarifas de Transporte</h1>
+    <!-- LOGO -->
+    <img src="logo.png" alt="Logo OBRAMAT" class="logo">
+
+    <!-- TÍTULO -->
+    <h1>Tarifas de Transporte</h1>
+
+    <!-- DESTINO -->
 
     <div class="grupo">
 
-        <label>Destino</label>
+        <label for="destino">
+            📍 Destino
+        </label>
 
         <input
             type="text"
             id="destino"
             list="listaDestinos"
-            placeholder="Escribe un pueblo...">
+            placeholder="Escribe el pueblo...">
 
         <datalist id="listaDestinos"></datalist>
 
     </div>
 
+    <!-- TIPO -->
+
     <div class="grupo">
 
-        <label>Tipo de transporte</label>
+        <label for="tipo">
+            🚚 Tipo de transporte
+        </label>
 
         <select id="tipo">
 
@@ -48,11 +62,15 @@
 
     </div>
 
+    <!-- BOTÓN -->
+
     <button onclick="buscarPrecio()">
 
-        CONSULTAR PRECIO
+        CONSULTAR TARIFA
 
     </button>
+
+    <!-- RESULTADO -->
 
     <div id="resultado">
 
@@ -65,4 +83,5 @@
 <script src="script.js"></script>
 
 </body>
+
 </html>
